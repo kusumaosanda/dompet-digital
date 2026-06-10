@@ -103,6 +103,21 @@ select.retro-input{appearance:none;background-image:url("data:image/svg+xml,%3Cs
 .sav-quick{font-size:11px;font-weight:700;padding:5px 12px;border:2px solid var(--border);border-radius:20px;background:#FFF9F0;color:var(--brown);cursor:pointer;font-family:'Quicksand',sans-serif}
 .sav-quick:active{background:var(--pink);border-color:var(--pink-dark)}
 
+/* 6-tab nav — smaller */
+.nav-btn{font-size:8px !important;padding:6px 2px 5px !important}
+.nav-btn i{font-size:17px !important}
+
+/* ASSET TABLE */
+.ast-row{display:grid;grid-template-columns:1fr auto;gap:4px;padding:10px 12px;border-bottom:1.5px solid #E8E4D8;align-items:start}
+.ast-row:last-child{border-bottom:none}
+.ast-name{font-size:13px;font-weight:700;color:var(--brown)}
+.ast-cat-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;background:#FEE9B2;color:#7A5500;border:1.5px solid #C08800;margin-top:2px}
+.ast-detail{font-size:11px;color:var(--gray);margin-top:2px}
+.ast-total{font-size:14px;font-weight:700;color:#7A5500;text-align:right;white-space:nowrap}
+.ast-actions{display:flex;gap:6px;align-items:center;flex-direction:column}
+.ast-cat-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #E8E4D8}
+.ast-cat-row:last-child{border-bottom:none}
+
 /* SYNC BUTTON in header */
 .retro-header{position:relative}
 .header-row{display:flex;align-items:flex-start;justify-content:space-between}
@@ -346,14 +361,91 @@ select.retro-input{appearance:none;background-image:url("data:image/svg+xml,%3Cs
       </div>
     </div>
 
-  </div><!-- /pages -->
+  </div><!-- /pages (cupadup end) -->
 
+    <!-- ASSET PAGE -->
+    <div id="page-asset" class="page">
+      <div class="retro-header" style="background:#FEE9B2;border-color:var(--border)">
+        <div class="header-row">
+          <div>
+            <div class="header-title">💰 Asset</div>
+            <div class="header-sub" style="color:#7A5500">Kelola aset Osa & Fena</div>
+          </div>
+          <button class="sync-btn" onclick="manualSyncAsset()" title="Sync"><i class="ti ti-refresh"></i></button>
+        </div>
+      </div>
+
+      <!-- INPUT FORM -->
+      <div class="retro-card">
+        <div class="section-title">➕ Tambah Asset</div>
+        <div class="form-group">
+          <label class="form-label">Nama Asset</label>
+          <input type="text" id="ast-name" class="retro-input" placeholder="contoh: Emas 24K, Saham BBCA">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Kategori</label>
+          <select id="ast-cat" class="retro-input">
+            <option value="">— pilih kategori —</option>
+            <option>Emas</option>
+            <option>Saham</option>
+            <option>Reksa Dana</option>
+            <option>Properti</option>
+            <option>Kripto</option>
+            <option>Tabungan</option>
+            <option>Deposito</option>
+            <option>Kendaraan</option>
+            <option>Lain-lain</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Jumlah (unit/gram/lot/dll)</label>
+          <input type="text" id="ast-qty" class="retro-input" placeholder="contoh: 10" inputmode="decimal">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Harga per unit (Rp)</label>
+          <div class="amount-wrap">
+            <span class="amount-prefix">IDR</span>
+            <input type="text" id="ast-price" class="retro-input" placeholder="0" inputmode="numeric">
+          </div>
+        </div>
+        <!-- Total preview -->
+        <div style="background:#FEE9B2;border:2px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:12px;font-weight:700;color:#7A5500;text-transform:uppercase">Total Preview</span>
+          <span style="font-size:16px;font-weight:700;color:var(--brown)" id="ast-preview">Rp 0</span>
+        </div>
+        <button class="save-btn" id="ast-save-btn" style="background:#FEE9B2;border-color:#C08800;box-shadow:4px 4px 0 #C08800;color:#7A5500" onclick="saveAsset()">Simpan Asset 💰</button>
+      </div>
+
+      <!-- ASSET LIST -->
+      <div class="retro-card" style="padding:8px 4px">
+        <div style="padding:0 12px 10px;display:flex;justify-content:space-between;align-items:center">
+          <div class="section-title" style="margin:0">Daftar Asset</div>
+          <div style="font-size:10px;font-weight:700;color:var(--gray)" id="ast-last-updated"></div>
+        </div>
+        <div id="list-asset">
+          <div class="empty-state"><i class="ti ti-coin"></i><span>Belum ada asset</span></div>
+        </div>
+      </div>
+
+      <!-- SUMMARY -->
+      <div class="retro-card" style="margin-bottom:16px">
+        <div class="section-title">📊 Ringkasan Asset</div>
+        <div id="ast-cat-summary"></div>
+        <div style="border-top:2px solid var(--border);margin-top:12px;padding-top:12px;display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:13px;font-weight:700;color:var(--brown)">Total Semua Asset</span>
+          <span style="font-size:20px;font-weight:700;color:#7A5500" id="ast-grand-total">Rp 0</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /pages -->
   <nav class="nav">
     <button class="nav-btn active" id="nav-input"   onclick="showPage('input')"><i class="ti ti-pencil-plus"></i>Input</button>
     <button class="nav-btn"        id="nav-income"  onclick="showPage('income')"><i class="ti ti-trending-up"></i>Masuk</button>
     <button class="nav-btn"        id="nav-expense" onclick="showPage('expense')"><i class="ti ti-trending-down"></i>Keluar</button>
     <button class="nav-btn"        id="nav-summary" onclick="showPage('summary')"><i class="ti ti-chart-pie"></i>Ringkasan</button>
     <button class="nav-btn"        id="nav-saving"  onclick="showPage('saving')"><i class="ti ti-heart-dollar"></i>Cupadup</button>
+    <button class="nav-btn"        id="nav-asset"   onclick="showPage('asset')"><i class="ti ti-coin"></i>💰 Asset</button>
   </nav>
 </div>
 
@@ -856,6 +948,161 @@ function calcSaving() {
   toast('Simulasi selesai! 💕');
 }
 
+// ── ASSET ─────────────────────────────────────────────────
+let assets = [];
+
+// Number format for asset inputs
+attachNumberFormat('ast-price');
+
+// Live preview total
+document.getElementById('ast-qty').addEventListener('input', updateAstPreview);
+document.getElementById('ast-price').addEventListener('input', updateAstPreview);
+
+function updateAstPreview() {
+  const qty   = parseFloat(document.getElementById('ast-qty').value.replace(/\./g,'').replace(',','.')) || 0;
+  const price = parseNumberInput(document.getElementById('ast-price').value);
+  document.getElementById('ast-preview').textContent = fmt(qty * price);
+}
+
+async function saveAsset() {
+  const name  = document.getElementById('ast-name').value.trim();
+  const cat   = document.getElementById('ast-cat').value;
+  const qty   = parseFloat(document.getElementById('ast-qty').value.replace(/\./g,'').replace(',','.')) || 0;
+  const price = parseNumberInput(document.getElementById('ast-price').value);
+
+  if (!name)       { toast('Masukkan nama asset!'); return; }
+  if (!cat)        { toast('Pilih kategori!'); return; }
+  if (qty <= 0)    { toast('Masukkan jumlah yang valid!'); return; }
+  if (price <= 0)  { toast('Masukkan harga yang valid!'); return; }
+
+  const asset = {
+    id: Date.now(),
+    name, cat, qty, price,
+    total: qty * price,
+    updatedAt: new Date().toISOString()
+  };
+
+  const btn = document.getElementById('ast-save-btn');
+  btn.disabled = true; btn.textContent = 'Menyimpan...';
+
+  try {
+    const data = await jsonp(SHEET_URL + '?action=addAsset&asset=' + encodeURIComponent(JSON.stringify(asset)));
+    if (data.status !== 'ok') throw new Error(data.message);
+    assets.push(asset);
+    cacheAssets();
+    toast('Asset tersimpan! 💰');
+    document.getElementById('ast-name').value  = '';
+    document.getElementById('ast-cat').value   = '';
+    document.getElementById('ast-qty').value   = '';
+    document.getElementById('ast-price').value = '';
+    document.getElementById('ast-preview').textContent = 'Rp 0';
+    renderAssets();
+  } catch(err) {
+    toast('Gagal simpan asset: ' + err.message);
+  }
+
+  btn.disabled = false; btn.textContent = 'Simpan Asset 💰';
+}
+
+async function deleteAsset(id) {
+  if (!confirm('Hapus asset ini?')) return;
+  try {
+    const data = await jsonp(SHEET_URL + '?action=deleteAsset&id=' + id);
+    if (data.status !== 'ok') throw new Error(data.message);
+    assets = assets.filter(a => a.id !== id);
+    cacheAssets();
+    toast('Asset dihapus!');
+    renderAssets();
+  } catch(err) {
+    toast('Gagal hapus: ' + err.message);
+  }
+}
+
+async function fetchAssets() {
+  try {
+    const data = await jsonp(SHEET_URL + '?action=getAssets');
+    if (data.status === 'ok') {
+      assets = (data.assets || []).map(a => ({
+        ...a,
+        id: Number(a.id),
+        qty: Number(a.qty),
+        price: Number(a.price),
+        total: Number(a.total)
+      }));
+      cacheAssets();
+      renderAssets();
+    }
+  } catch(err) {
+    // fallback to cache
+    try { assets = JSON.parse(localStorage.getItem('ofasset') || '[]'); } catch(e) { assets = []; }
+    renderAssets();
+  }
+}
+
+function cacheAssets() {
+  try { localStorage.setItem('ofasset', JSON.stringify(assets)); } catch(e) {}
+}
+
+function manualSyncAsset() {
+  fetchAssets();
+  toast('Asset disinkronkan!');
+}
+
+function renderAssets() {
+  const el = document.getElementById('list-asset');
+
+  if (!assets.length) {
+    el.innerHTML = '<div class="empty-state"><i class="ti ti-coin"></i><span>Belum ada asset</span></div>';
+    document.getElementById('ast-grand-total').textContent = 'Rp 0';
+    document.getElementById('ast-cat-summary').innerHTML = '';
+    document.getElementById('ast-last-updated').textContent = '';
+    return;
+  }
+
+  // Sort by updatedAt desc
+  const sorted = assets.slice().sort((a,b) => (b.updatedAt||'').localeCompare(a.updatedAt||''));
+
+  // Last updated
+  const lastDate = new Date(sorted[0].updatedAt);
+  document.getElementById('ast-last-updated').textContent =
+    'Update: ' + lastDate.toLocaleDateString('id-ID', {day:'numeric',month:'short',year:'numeric'}) +
+    ' ' + lastDate.toLocaleTimeString('id-ID', {hour:'2-digit',minute:'2-digit'});
+
+  // Render rows
+  el.innerHTML = sorted.map(a => `
+    <div class="ast-row">
+      <div>
+        <div class="ast-name">${a.name}</div>
+        <span class="ast-cat-badge">${a.cat}</span>
+        <div class="ast-detail">${a.qty} unit × ${fmt(a.price)}</div>
+      </div>
+      <div class="ast-actions">
+        <div class="ast-total">${fmt(a.total)}</div>
+        <button class="del-btn" onclick="deleteAsset(${a.id})"><i class="ti ti-trash"></i></button>
+      </div>
+    </div>`).join('');
+
+  // Category summary
+  const byCat = assets.reduce((acc, a) => {
+    acc[a.cat] = (acc[a.cat] || 0) + a.total;
+    return acc;
+  }, {});
+  const grandTotal = assets.reduce((s, a) => s + a.total, 0);
+
+  document.getElementById('ast-cat-summary').innerHTML = Object.entries(byCat)
+    .sort((a,b) => b[1] - a[1])
+    .map(([cat, total]) => `
+      <div class="ast-cat-row">
+        <span style="font-size:12px;font-weight:700;color:var(--brown)">${cat}</span>
+        <div style="text-align:right">
+          <div style="font-size:13px;font-weight:700;color:#7A5500">${fmt(total)}</div>
+          <div style="font-size:10px;color:var(--gray)">${Math.round(total/grandTotal*100)}%</div>
+        </div>
+      </div>`).join('');
+
+  document.getElementById('ast-grand-total').textContent = fmt(grandTotal);
+}
+
 // ── MANUAL SYNC ─────────────────────────────────────────
 function manualSync() {
   document.querySelectorAll('.sync-btn').forEach(btn => btn.classList.add('spinning'));
@@ -868,6 +1115,7 @@ function manualSync() {
 function initApp() {
   logDeviceAccess();
   fetchEntries();
+  fetchAssets();
   setInterval(() => fetchEntries(), 60000);
 }
 
