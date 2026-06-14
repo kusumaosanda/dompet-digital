@@ -1022,18 +1022,23 @@ async function fetchAssets() {
   try {
     const data = await jsonp(SHEET_URL + '?action=getAssets');
     if (data.status === 'ok') {
-      assets = (data.assets || []).map(a => ({
-        ...a,
-        id: Number(a.id),
-        qty: Number(a.qty),
-        price: Number(a.price),
-        total: Number(a.total)
-      }));
+      assets = (data.assets || []).map(a => {
+        // Normalize: support both old sheet column names and new ones
+        return {
+          id:        Number(a.id        || a.ID        || Date.now()),
+          name:      a.name      || a.Asset     || a.Nama  || '',
+          cat:       a.cat       || a.Kategori  || a.Cat   || '',
+          qty:       Number(a.qty || a.jumlah   || a.Qty   || 0),
+          price:     Number(a.price || a.harga  || a.Price || 0),
+          total:     Number(a.total || a.Total  || 0) || (Number(a.qty || a.jumlah || 0) * Number(a.price || a.harga || 0)),
+          updatedAt: a.updatedAt || a['Last Updated'] || new Date().toISOString()
+        };
+      }).filter(a => a.name); // skip empty rows
       cacheAssets();
       renderAssets();
     }
   } catch(err) {
-    // fallback to cache
+    console.error('fetchAssets error:', err);
     try { assets = JSON.parse(localStorage.getItem('ofasset') || '[]'); } catch(e) { assets = []; }
     renderAssets();
   }
